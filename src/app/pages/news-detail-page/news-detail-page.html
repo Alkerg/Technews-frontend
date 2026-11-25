@@ -1,0 +1,24 @@
+@let newsData = this.newsData();
+
+<navbar></navbar>
+
+<main class="bg-background">
+    <article class="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10 lg:py-14">
+
+        @if(isLoadingNews()){
+            <news-detail-skeleton></news-detail-skeleton>
+        }
+        @else {
+            @if (newsData) {
+                <header class="mb-8 border-b-2 border-primary-100 pb-6 sm:mb-10 sm:pb-8">
+                    <span class="mb-4 block h-1 w-12 rounded-full bg-accent" aria-hidden="true"></span>
+                    <h1 class="text-[1.75rem] leading-tight font-extrabold tracking-tight text-balance text-text sm:text-[2.125rem] lg:text-[2.75rem]">
+                        {{ newsData.title }}
+                    </h1>
+                </header>
+                <markdown class="news-content" [data]="newsData.content"></markdown>
+            }
+        }
+        
+    </article>
+</main>

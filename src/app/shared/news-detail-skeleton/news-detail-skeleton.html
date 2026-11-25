@@ -1,0 +1,49 @@
+<div role="status" aria-live="polite" class="animate-pulse">
+  <span class="sr-only">Cargando noticia…</span>
+
+  <div aria-hidden="true">
+
+    <div class="mb-8 border-b-2 border-primary-100 pb-6 sm:mb-10 sm:pb-8">
+      <span class="mb-4 block h-1 w-12 rounded-full bg-accent/40"></span>
+
+      @for (width of titleLines; track $index) {
+        <div class="flex h-[2.1875rem] items-center sm:h-[2.66rem] lg:h-[3.44rem]">
+          <div class="h-6 rounded-full bg-primary-200 sm:h-7 lg:h-9" [class]="width"></div>
+        </div>
+      }
+    </div>
+
+    @for (block of body; track $index) {
+      @switch (block.type) {
+
+        @case ('paragraph') {
+          <div class="mb-5 sm:mb-6">
+            @for (width of block.lines; track $index) {
+              <div class="flex h-7 items-center sm:h-[1.86rem] lg:h-[2.03rem]">
+                <div class="h-3 rounded-full bg-primary-100 sm:h-3.5" [class]="width"></div>
+              </div>
+            }
+          </div>
+        }
+
+        @case ('heading') {
+          <div class="mt-10 mb-5 border-b-2 border-primary-100 pb-2">
+            <div class="flex h-[1.8rem] items-center sm:h-[2.1rem] lg:h-[2.45rem]">
+              <div class="h-5 w-1/2 rounded-full bg-primary-200 sm:h-6"></div>
+            </div>
+          </div>
+        }
+
+        @case ('image') {
+          <div class="mb-6 grid aspect-video w-full place-items-center rounded-xl bg-primary-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+              class="h-12 w-12 text-primary-300">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+            </svg>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>

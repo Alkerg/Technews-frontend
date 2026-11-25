@@ -1,0 +1,119 @@
+<nav class="sticky top-0 z-30 border-b-4 border-accent bg-primary-900 text-primary-50 shadow-md">
+    <div class="mx-auto flex max-w-7xl flex-row items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
+
+        <!-- Logo -->
+        <a
+            [routerLink]="'/'"
+            class="text-xl font-extrabold tracking-tight text-primary-400 transition-colors hover:text-primary-200 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 sm:text-2xl">
+            TechNews
+        </a>
+
+        <!-- Boton de filtros -->
+        <button
+            type="button"
+            (click)="openFilterModal()"
+            class="flex cursor-pointer flex-row items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1.25em" height="1.25em" viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M0 0h32v32H0z" fill="none" />
+                <path fill="currentColor" d="M18 28h-4a2 2 0 0 1-2-2v-7.59L4.59 11A2 2 0 0 1 4 9.59V6a2 2 0 0 1 2-2h20a2 2 0 0 1 2 2v3.59a2 2 0 0 1-.59 1.41L20 18.41V26a2 2 0 0 1-2 2M6 6v3.59l8 8V26h4v-8.41l8-8V6Z" />
+            </svg>
+            Filtrar
+        </button>
+    </div>
+
+    @if (this.isFilterModalActive()) {
+        <!-- Fondo oscuro -->
+        <div (click)="closeFilterModal()" class="fixed inset-0 z-40 bg-primary-900/60 backdrop-blur-sm" aria-hidden="true"></div>
+
+        <!-- Menu modal de filtros -->
+        <aside
+            class="fixed top-0 right-0 z-50 flex h-dvh w-full max-w-sm flex-col bg-background text-text shadow-2xl"
+            [formGroup]="filtersForm"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="filtros-titulo">
+
+            <!-- Cabecera -->
+            <div class="flex flex-row items-center justify-between border-b border-primary-100 bg-surface px-5 py-4">
+                <h2 id="filtros-titulo" class="text-xl font-bold text-primary-800">Filtros</h2>
+                <button
+                    type="button"
+                    (click)="closeFilterModal()"
+                    aria-label="Cerrar filtros"
+                    class="cursor-pointer rounded-full p-2 text-primary-700 transition-colors hover:bg-primary-100 hover:text-primary-900 focus-visible:outline-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.25em" height="1.25em" viewBox="0 0 1024 1024" aria-hidden="true">
+                        <path d="M0 0h1024v1024H0z" fill="none" />
+                        <path fill="currentColor" fill-rule="evenodd" d="M799.855 166.312c.023.007.043.018.084.059l57.69 57.69c.041.041.052.06.059.084a.1.1 0 0 1 0 .069c-.007.023-.018.042-.059.083L569.926 512l287.703 287.703c.041.04.052.06.059.083a.12.12 0 0 1 0 .07c-.007.022-.018.042-.059.083l-57.69 57.69c-.041.041-.06.052-.084.059a.1.1 0 0 1-.069 0c-.023-.007-.042-.018-.083-.059L512 569.926L224.297 857.629c-.04.041-.06.052-.083.059a.12.12 0 0 1-.07 0c-.022-.007-.042-.018-.083-.059l-57.69-57.69c-.041-.041-.052-.06-.059-.084a.1.1 0 0 1 0-.069c.007-.023.018-.042.059-.083L454.073 512L166.371 224.297c-.041-.04-.052-.06-.059-.083a.12.12 0 0 1 0-.07c.007-.022.018-.042.059-.083l57.69-57.69c.041-.041.06-.052.084-.059a.1.1 0 0 1 .069 0c.023.007.042.018.083.059L512 454.073l287.703-287.702c.04-.041.06-.052.083-.059a.12.12 0 0 1 .07 0Z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Filtros -->
+            <div class="flex flex-1 flex-col gap-6 overflow-y-auto px-5 py-6">
+
+                <fieldset class="flex flex-col gap-3">
+                    <legend class="mb-3 text-sm font-bold tracking-wide text-primary-700 uppercase">Rango de fechas</legend>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="filtro-desde" class="text-sm font-semibold">Desde</label>
+                        <input
+                            id="filtro-desde"
+                            type="date"
+                            formControlName="from"
+                            [attr.max]="filtersForm.value.to"
+                            class="w-full rounded-lg border border-primary-200 bg-white px-3 py-2 text-text accent-primary transition focus:border-primary focus:ring-2 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="filtro-hasta" class="text-sm font-semibold">Hasta</label>
+                        <input
+                            id="filtro-hasta"
+                            type="date"
+                            formControlName="to"
+                            [attr.min]="filtersForm.value.from"
+                            class="w-full rounded-lg border border-primary-200 bg-white px-3 py-2 text-text accent-primary transition focus:border-primary focus:ring-2 focus:outline-none">
+                    </div>
+
+                    @if (filtersForm.hasError('dateRange')) {
+                        <p class="text-sm text-red-700">La fecha "Desde" no puede ser posterior a "Hasta".</p>
+                    }
+                </fieldset>
+
+                <div class="flex flex-col gap-1.5">
+                    <label for="filtro-categoria" class="mb-1.5 text-sm font-bold tracking-wide text-primary-700 uppercase">Categoría</label>
+                    <select
+                        id="filtro-categoria"
+                        formControlName="category"
+                        class="w-full cursor-pointer rounded-lg border border-primary-200 bg-white px-3 py-2 text-text transition focus:border-primary focus:ring-2  focus:outline-none">
+                        <option value="">Todas</option>
+                        <option value="videojuegos">Videojuegos</option>
+                        <option value="ciencia">Ciencia</option>
+                        <option value="tecnología">Tecnología</option>
+                        <option value="política">Política</option>
+                        <option value="economía">Economía</option>
+                        <option value="deportes">Deportes</option>
+                        <option value="arte">Arte</option>
+                        <option value="misceláneos">Misceláneos</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex flex-row gap-3 border-t border-primary-100 bg-surface px-5 py-4">
+                <button
+                    (click)="clearFilters()"
+                    type="button"
+                    class="flex-1 cursor-pointer rounded-lg border border-primary-300 bg-white px-4 py-2.5 font-semibold text-primary-800 transition-colors hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                    Limpiar
+                </button>
+                <button
+                    (click)="applyFilters()"
+                    [disabled]="filtersForm.invalid"
+                    type="button"
+                    class="flex-1 cursor-pointer rounded-lg bg-primary px-4 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                    Aplicar
+                </button>
+            </div>
+        </aside>
+    }
+</nav>
